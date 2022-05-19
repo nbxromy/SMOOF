@@ -10,10 +10,14 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@chartiful/react-native-chart-builder": "^0.1.8",
+    "@chartiful/react-native-line-graph": "^0.1.2",
+    "@chartiful/react-native-vertical-bar-graph": "^0.1.2",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.1",
     "expo": "~44.0.0",
     "expo-status-bar": "~1.2.0",
+    "qs": "^6.10.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
