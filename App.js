@@ -23,7 +23,7 @@
 // In App.js in a new project
 
 import * as React from 'react';
-import { StyleSheet, View, Dimensions, SafeArea, Text, Image, Button } from 'react-native';
+import { StyleSheet, View, ScrollView, Dimensions, SafeArea, Text, Image, Button, Alert} from 'react-native';
 import VerticalBarGraph from '@chartiful/react-native-chart-builder/lib/types';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -38,6 +38,8 @@ import {
   ContributionGraph,
   StackedBarChart
 } from "react-native-chart-kit";
+import { backgroundColor, color } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -57,57 +59,59 @@ function HomeScreen({ navigation }) {
 
 function ProfileScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center' , marginTop: 25 }}>
-      <Text style={styles.kleurBlue}>Your data</Text>
-      <View style={{ marginTop: 30,alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'row'}}>
-      <Image 
-        style= {{
-          width: 50,
-          height: 50,
-          resizeMode: 'contain'
-        }}
-        source={{
-          uri: 'https://cdn-icons.flaticon.com/png/512/1818/premium/1818145.png?token=exp=1652867719~hmac=bbb63cc9acd2dfca5ddb75fb0d25584c'
-        }}
-        />
-        
-      <Text>       </Text>
-      <Image 
-        style= {{
-          width: 50,
-          height: 50,
-          resizeMode: 'contain'
-        }}
-        source={{
-          uri: 'https://cdn-icons.flaticon.com/png/512/2992/premium/2992422.png?token=exp=1652867764~hmac=6e92bf36deb70091a9877462327448f9'
-        }}
-        />
+//    <View style={{ flex: 1, alignItems: 'center' , marginTop: 25 }}>
       
-      </View>
-      <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
-      <Text style={styles.kleurGroen}>{heartRate} bps</Text>
-      <Text>     </Text>
-      <Text style={styles.kleurGroen}>{slaap}hours</Text>
-      </View>
+//      <View style={{ marginTop: 30,alignItems: 'center', justifyContent: 'flex-start', flexDirection: 'row'}}>
+//      <Image 
+//        style= {{
+ //         width: 50,
+ //         height: 50,
+ //         resizeMode: 'contain'
+ //       }}
+//        source={{
+//          uri: 'https://cdn-icons.flaticon.com/png/512/1818/premium/1818145.png?token=exp=1652867719~hmac=bbb63cc9acd2dfca5ddb75fb0d25584c'
+//        }}
+ //       />
+  //      
+ //     <Text>       </Text>
+ //     <Image 
+ //       style= {{
+  //        width: 50,
+//          height: 50,
+//          resizeMode: 'contain'
+//        }}
+//        source={{
+//          uri: 'https://cdn-icons.flaticon.com/png/512/2992/premium/2992422.png?token=exp=1652867764~hmac=6e92bf36deb70091a9877462327448f9'
+ //       }}
+//        />
       
+//      </View>
+//      <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+//      <Text style={styles.kleurGroen}>{heartRate} bps</Text>
+//      <Text>     </Text>
+//      <Text style={styles.kleurGroen}>{slaap}hours</Text>
+//      </View>
+      <View>
+        <Text style={styles.kleurBlue}>Your data</Text>
+        <Text Style={{marginTop:0}}>Heart rate</Text>
       <LineChart
     data={{
       labels: ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
       datasets: [
         {
-          data: [0,0,0,0,0,0,0]
+          data: [76,80,75,0,0,0,0]
         }
       ]
     }}
     width={Dimensions.get("window").width} // from react-native
     height={200}
     yAxisLabel=""
-    yAxisSuffix="°C"
+    yAxisSuffix="Bps"
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
       backgroundColor: "#e26a00",
-      backgroundGradientFrom: "#fb8c00",
-      backgroundGradientTo: "#ffa726",
+      backgroundGradientFrom: 'rgb(86, 227, 159)',
+      backgroundGradientTo: 'rgb(39, 76, 119)',
       decimalPlaces: 0, // optional, defaults to 2dp
       color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -122,17 +126,60 @@ function ProfileScreen() {
     }}
     bezier
     style={{
-      marginTop: 20,
+      height: 150,
+      marginTop: 0,
+      marginBottom:50,
       marginVertical: 8,
       borderRadius: 16
     }}
   />
+
+<Text Style={{marginTop:20}}>Average temperature</Text>
+      <LineChart
+    data={{
+      labels: ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
+      datasets: [
+        {
+          data: [32,31.5,33,0,0,0,0]
+        }
+      ]
+    }}
+    width={Dimensions.get("window").width} // from react-native
+    height={180}
+    yAxisLabel=""
+    yAxisSuffix="°C"
+    yAxisInterval={1} // optional, defaults to 1
+    chartConfig={{
+      backgroundColor: "#e26a00",
+      backgroundGradientFrom: 'rgb(86, 227, 159)',
+      backgroundGradientTo: 'rgb(39, 76, 119)',
+      decimalPlaces: 0, // optional, defaults to 2dp
+      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+      style: {
+        borderRadius: 16, 
+      },
+      propsForDots: {
+        r: "6",
+        strokeWidth: "2",
+        stroke: "#ffa726"
+      }
+    }}
+    bezier
+    style={{
+  
+      marginTop: 0,
+      marginVertical: 8,
+      borderRadius: 16
+    }}
+  />
+  <Text Style={styles.kleurBlue}>Your amount of sleep</Text>
   <BarChart
     data={{
       labels: ["Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
       datasets: [
         {
-          data: [6,6.5,7,7.25,5.75,7,6]
+          data: [6,6.5,7,0,0,0,0]
         }
       ]
     }}
@@ -142,8 +189,11 @@ function ProfileScreen() {
     yAxisSuffix=" Hr(s)"
     yAxisInterval={1} // optional, defaults to 1
     chartConfig={{
-      backgroundColor: "#eee",
-      decimalPlaces: 1, // optional, defaults to 2dp
+      backgroundColor: 'rgb(39, 76, 119)',
+      backgroundColor: "#e26a00",
+      backgroundGradientFrom: 'rgb(86, 227, 159)',
+      backgroundGradientTo: 'rgb(39, 76, 119)',
+      decimalPlaces: 0, // optional, defaults to 2dp
       color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
       style: {
@@ -156,10 +206,18 @@ function ProfileScreen() {
       }
     }}
     style={{
+      marginTop: 0,
       marginVertical: 8,
       borderRadius: 16
     }}
-  />
+     />
+
+    <Button 
+    title=''
+    color= 'transparent'
+    onPress={
+      () =>Alert.alert( 'You are Sleepwalking!')
+    }/>
     </View>
     
 
@@ -170,6 +228,17 @@ function ProfileScreen() {
 
 var heartRate = 0 ;
 var slaap = 0 ;
+var IsSleeping = false;
+var IsWalking = false;
+var IsSleepwalking = false;
+
+function sleepwalk(){
+  if (IsSleeping && IsWalking){
+    return sleepAlert
+  }
+}
+
+
 
 const Stack = createNativeStackNavigator();
 
@@ -183,6 +252,8 @@ function App() {
     </NavigationContainer>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   kleurBlue: {
