@@ -5,10 +5,13 @@ import {
   View,
   Text,
   StyleSheet,
+  Button,
   ScrollView
 } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import ProfileScreen from './ProfileScreen';
+import App from 'C:/Users/wouts/Source/Repos/nbxromy/SMOOF/App';
 
-import ContactList from './ContactList';
 
 const URL_CONTACTS = 'http://localhost:3004/contact'
 
@@ -16,29 +19,21 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
 
+     // const [isShowingText, setIsShowingText] = useState(true);
+
     this.state = {
-      contacts: ''
     }
-  }
-
-  componentDidMount() {
-    fetch(URL_CONTACTS, {
-      method: 'GET'
-    })
-    .then(response => response.json())
-    .then(json => {
-      this.setState({contacts:json})
-    })
-  }
-
+    }
 
   render() {
     return (
-      <ScrollView>
-        <ContactList
-          allContacts={this.state.contacts}
-           />
-      </ScrollView>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={styles.kleurGroen}>Please connect your device</Text>
+            <Button
+                title="Connect to the app"
+                onPress={() => this.props.navigation.navigate('ProfileScreen')}
+            />
+        </View>
     );
   }
 }
