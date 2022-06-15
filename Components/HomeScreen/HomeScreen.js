@@ -8,9 +8,9 @@ import {
   Button,
   ScrollView
 } from 'react-native';
-import { withNavigation } from 'react-navigation';
+//import { withNavigation } from 'react-navigation';
 import ProfileScreen from './ProfileScreen';
-import App from 'C:/Users/wouts/Source/Repos/nbxromy/SMOOF/App';
+//import App from 'C:/Users/hendr/Documents/GitHub/SMOOF/App';
 
 
 const URL_CONTACTS = 'http://localhost:3004/contact'

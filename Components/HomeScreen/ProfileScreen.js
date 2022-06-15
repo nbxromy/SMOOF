@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { Component,useState } from 'react';
 import {
     LineChart,
     BarChart,
@@ -10,9 +10,17 @@ import {
     StackedBarChart
 } from "react-native-chart-kit";
 import { StyleSheet, View, ScrollView, Dimensions, SafeArea, Text, Image, Button, Alert } from 'react-native';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
+
 
 
 const URL_CONTACTS = 'http://localhost:3004/contact'
+
+//var options = {authorization : YOUR_API_KEY , message : 'Test message' ,  numbers : ['062364091']} 
+
+
+
 
 export default class ProfileScreen extends Component {
     constructor(props) {
@@ -25,6 +33,21 @@ export default class ProfileScreen extends Component {
             fb_dates: [0],
             ready: "no"
         }
+    }
+
+    showAlert1() {  
+        Alert.alert(  
+            'Alert Title',  
+            'My Alert Msg',  
+            [  
+                {  
+                    text: 'Cancel',  
+                    onPress: () => console.log('Cancel Pressed'),  
+                    style: 'cancel',  
+                },  
+                {text: 'OK', onPress: () => console.log('OK Pressed')},  
+            ]  
+        );  
     }
 
     get_fitbit_data = () => {
@@ -63,13 +86,14 @@ export default class ProfileScreen extends Component {
         this.get_fitbit_data();
     }
 
+    
 
     render() {
         return (
-            <View>
-                <Text style={styles.kleurBlue}>Your data</Text>
-                <Text Style={{ marginTop: 0 }}>Heart rate</Text>
-                <LineChart
+            <View style={styles.container}>
+                <SwiperFlatList showPagination>
+                <View style={[styles.child, {backgroundColor: 'white'}]}>
+                 <LineChart
                     data={{
                         labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
                         datasets: [
@@ -79,7 +103,7 @@ export default class ProfileScreen extends Component {
                         ]
                     }}
                     width={Dimensions.get("window").width} // from react-native
-                    height={200}
+                    height={0.4*height}
                     yAxisLabel=""
                     yAxisSuffix="Bps"
                     yAxisInterval={1} // optional, defaults to 1
@@ -101,16 +125,39 @@ export default class ProfileScreen extends Component {
                     }}
                     bezier
                     style={{
-                        height: 150,
+                        
                         marginTop: 0,
-                        marginBottom: 50,
                         marginVertical: 8,
                         borderRadius: 16
                     }}
-                />
-
-                <Text Style={styles.kleurBlue}>Your amount of sleep</Text>
-                <BarChart
+                 />
+                <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Heartrate:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      Last detected = 73 Bps</Text>
+                 </View>
+                 <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Contacts:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      The contact list is empty.</Text>
+                 </View>
+                </View>
+                 <View style={[styles.child, {backgroundColor: 'white'}]}>
+                  <BarChart
                     data={{
                         labels: this.state.fb_dates,
                         datasets: [
@@ -120,7 +167,7 @@ export default class ProfileScreen extends Component {
                         ]
                     }}
                     width={Dimensions.get("window").width} // from react-native
-                    height={400}
+                    height={0.4*height}
                     yAxisLabel=""
                     yAxisSuffix=" Hr(s)"
                     yAxisInterval={1} // optional, defaults to 1
@@ -147,14 +194,60 @@ export default class ProfileScreen extends Component {
                         marginVertical: 8,
                         borderRadius: 16
                     }}
-                />
+                 />
+                 <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Sleepwalking:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      You have not sleepwalked this week.</Text>
+                 </View>
+                 <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Contacts:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      The contact list is empty.</Text>
+                 </View>
+                </View>
 
-                <Button
-                    title=''
-                    color='transparent'
-                    onPress={
-                        () => Alert.alert('You are Sleepwalking!')
-                    } />
+                <View style={[styles.child, { backgroundColor: 'white' }]}>
+                    <Text style={{color: 'rgb(39, 76, 119)', fontWeight: 'bold', fontSize: 20}}>Contact list</Text>
+                    <View >
+                    <Button
+                     title=""
+                    color="white"
+                     />
+                 </View>
+                    <View style={{ justifyContent: 'flex-start'}}>
+                    <Button title='Add contacts' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}} /> 
+                    </View>
+                </View>
+                
+                <View style={[styles.child, { backgroundColor: 'white' }]}>
+                <Text style={{color: 'rgb(39, 76, 119)', fontWeight: 'bold', fontSize: 20}}>About</Text>
+                <View >
+                    <Button
+                     title=""
+                    color="white"
+                     />
+                 </View>
+                <View>
+                    <Text style={styles.kleurGroen}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                </View>
+                </View>
+                
+                </SwiperFlatList>                
             </View>
         );
     }
@@ -164,16 +257,25 @@ function convert_data(data) {
     return Math.round((data / 60) * 100) / 100;
 }
 
+const { width,height } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
     kleurBlue: {
         color: 'rgb(39, 76, 119)',
         fontWeight: 'bold',
-        fontSize: 25,
+        alignItems:'center'
     },
 
     kleurGroen: {
         color: 'rgb(86, 227, 159)',
         fontWeight: 'bold',
         fontSize: 20,
-    }
+    },
+    container: { flex: 1, backgroundColor: 'white' },
+    child: { width, height:0.4*height },
+    fixToText: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        margin: 20,
+      },
 });
