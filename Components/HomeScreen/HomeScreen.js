@@ -6,7 +6,8 @@ import {
   Text,
   StyleSheet,
   Button,
-  ScrollView
+  ScrollView,
+  Image
 } from 'react-native';
 //import { withNavigation } from 'react-navigation';
 import ProfileScreen from './ProfileScreen';
@@ -28,6 +29,9 @@ export default class HomeScreen extends Component {
   render() {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Image
+            source={{uri:'https://cdn-icons.flaticon.com/png/512/6070/premium/6070321.png?token=exp=1655281453~hmac=be1a43e96fc802666e016d8f0f3c04ab', 
+            width: 250, height:250 }} />
             <Text style={styles.kleurGroen}>Please connect your device</Text>
             <Button
                 title="Connect to the app"
