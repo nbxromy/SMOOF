@@ -82,8 +82,37 @@ export default class ProfileScreen extends Component {
             });
     }
 
+    get_sleepwalk_data() {
+
+
+        console.log("---  fetching data from fitbit api  ---")
+        fetch('http://109.74.195.63/sleepwalk', {
+            method: "GET",
+            headers: {
+              },
+        })
+        
+        .then((response) => response.json())
+        .then((responseData) => {
+                                 console.log("inside responsejson");
+                                 console.log('response object:',responseData)
+            
+         }).catch((error) => console.error(error));
+         
+    }
+
+    
+    
+
+    
+
+    
+
     componentDidMount() {
         this.get_fitbit_data();
+        var fitbitData = this.get_sleepwalk_data();
+        console.log("---    logging data from variable    ---");
+        console.log(fitbitData);
     }
 
     
