@@ -120,72 +120,10 @@ export default class ProfileScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <SwiperFlatList showPagination>
-                <View style={[styles.child, {backgroundColor: 'white'}]}>
-                 <LineChart
-                    data={{
-                        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
-                        datasets: [
-                            {
-                                data: [76, 80, 75, 0, 0, 0, 0]
-                            }
-                        ]
-                    }}
-                    width={Dimensions.get("window").width} // from react-native
-                    height={0.4*height}
-                    yAxisLabel=""
-                    yAxisSuffix="Bps"
-                    yAxisInterval={1} // optional, defaults to 1
-                    chartConfig={{
-                        backgroundColor: "#e26a00",
-                        backgroundGradientFrom: 'rgb(86, 227, 159)',
-                        backgroundGradientTo: 'rgb(39, 76, 119)',
-                        decimalPlaces: 0, // optional, defaults to 2dp
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                            borderRadius: 16,
-                        },
-                        propsForDots: {
-                            r: "6",
-                            strokeWidth: "2",
-                            stroke: "#ffa726"
-                        }
-                    }}
-                    bezier
-                    style={{
-                        
-                        marginTop: 0,
-                        marginVertical: 8,
-                        borderRadius: 16
-                    }}
-                 />
-                <View >
-                 <Button
-                 title=""
-                 color="white"
-                 />
-                 </View>
-                 <View style={styles.fixToText}>
-                <Button title='Heartrate:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
-                 </View>
-                 <View style={{justifyContent:'flex-end'}}>
-                 <Text style={styles.kleurGroen}>      Last detected = 73 Bps</Text>
-                 </View>
-                 <View >
-                 <Button
-                 title=""
-                 color="white"
-                 />
-                 </View>
-                 <View style={styles.fixToText}>
-                <Button title='Contacts:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
-                 </View>
-                 <View style={{justifyContent:'flex-end'}}>
-                 <Text style={styles.kleurGroen}>      The contact list is empty.</Text>
-                 </View>
-                </View>
+                <SwiperFlatList paginationDefaultColor='rgb(39, 76, 119)' paginationActiveColor='rgb(86, 227, 159)' showPagination>
+                
                  <View style={[styles.child, {backgroundColor: 'white'}]}>
+                 <Text style={{color: 'rgb(39, 76, 119)', fontWeight: 'bold', fontSize: 20}}>Your sleep</Text>
                   <BarChart
                     data={{
                         labels: this.state.fb_dates,
@@ -234,7 +172,73 @@ export default class ProfileScreen extends Component {
                 <Button title='Sleepwalking:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
                  </View>
                  <View style={{justifyContent:'flex-end'}}>
-                 <Text style={styles.kleurGroen}>      You have not sleepwalked this week.</Text>
+                 <Text style={{color: 'rgb(86, 227, 159)', fontWeight: 'bold', flexWrap:'nowrap', fontSize: 17, marginBottom:4}}>      You have sleepwalked at 2022-05-15 02:37</Text>
+                 </View>
+                 <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Contacts:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      The contact list is empty.</Text>
+                 </View>
+                </View>
+
+                <View style={[styles.child, {backgroundColor: 'white'}]}>
+                <Text style={{color: 'rgb(39, 76, 119)', fontWeight: 'bold', fontSize: 20}}>Heartrate</Text>
+                 <LineChart
+                    data={{
+                        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
+                        datasets: [
+                            {
+                                data: [0, 0, 52, 0, 0, 0, 0]
+                            }
+                        ]
+                    }}
+                    width={Dimensions.get("window").width} // from react-native
+                    height={0.4*height}
+                    yAxisLabel=""
+                    yAxisSuffix="Bps"
+                    yAxisInterval={1} // optional, defaults to 1
+                    chartConfig={{
+                        backgroundColor: "#e26a00",
+                        backgroundGradientFrom: 'rgb(86, 227, 159)',
+                        backgroundGradientTo: 'rgb(39, 76, 119)',
+                        decimalPlaces: 0, // optional, defaults to 2dp
+                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        style: {
+                            borderRadius: 16,
+                        },
+                        propsForDots: {
+                            r: "6",
+                            strokeWidth: "2",
+                            stroke: "#ffa726"
+                        }
+                    }}
+                    bezier
+                    style={{
+                        
+                        marginTop: 0,
+                        marginVertical: 8,
+                        borderRadius: 16
+                    }}
+                 />
+                <View >
+                 <Button
+                 title=""
+                 color="white"
+                 />
+                 </View>
+                 <View style={styles.fixToText}>
+                <Button title='Heartrate:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
+                 </View>
+                 <View style={{justifyContent:'flex-end'}}>
+                 <Text style={styles.kleurGroen}>      Last detected = 86 Bps</Text>
                  </View>
                  <View >
                  <Button
