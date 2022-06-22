@@ -1,0 +1,209 @@
+*/
+App in index.js
+*/
+
+import { Accelerometer } from "accelerometer";
+import { Barometer } from "barometer";
+import { BodyPresenceSensor } from "body-presence";
+import { display } from "display";
+import * as document from "document";
+import { Gyroscope } from "gyroscope";
+import { HeartRateSensor } from "heart-rate";
+import { OrientationSensor } from "orientation";
+
+const accelLabel = document.getElementById("accel-label");
+const accelData = document.getElementById("accel-data");
+
+const barLabel = document.getElementById("bar-label");
+const barData = document.getElementById("bar-data");
+
+const bpsLabel = document.getElementById("bps-label");
+const bpsData = document.getElementById("bps-data");
+
+const gyroLabel = document.getElementById("gyro-label");
+const gyroData = document.getElementById("gyro-data");
+
+const hrmLabel = document.getElementById("hrm-label");
+const hrmData = document.getElementById("hrm-data");
+
+const orientationLabel = document.getElementById("orientation-label");
+const orientationData = document.getElementById("orientation-data");
+
+const sensors = [];
+
+if (Accelerometer) {
+  const accel = new Accelerometer({ frequency: 1 });
+  accel.addEventListener("reading", () => {
+    accelData.text = JSON.stringify({
+      x: accel.x ? accel.x.toFixed(1) : 0,
+      y: accel.y ? accel.y.toFixed(1) : 0,
+      z: accel.z ? accel.z.toFixed(1) : 0
+    });
+  });
+  sensors.push(accel);
+  accel.start();
+} else {
+  accelLabel.style.display = "none";
+  accelData.style.display = "none";
+}
+
+if (Barometer) {
+  const barometer = new Barometer({ frequency: 1 });
+  barometer.addEventListener("reading", () => {
+    barData.text = JSON.stringify({
+      pressure: barometer.pressure ? parseInt(barometer.pressure) : 0
+    });
+  });
+  sensors.push(barometer);
+  barometer.start();
+} else {
+  barLabel.style.display = "none";
+  barData.style.display = "none";
+}
+
+if (BodyPresenceSensor) {
+  const bps = new BodyPresenceSensor();
+  bps.addEventListener("reading", () => {
+    bpsData.text = JSON.stringify({
+      presence: bps.present
+    })
+  });
+  sensors.push(bps);
+  bps.start();
+} else {
+  bpsLabel.style.display = "none";
+  bpsData.style.display = "none";
+}
+
+if (Gyroscope) {
+  const gyro = new Gyroscope({ frequency: 1 });
+  gyro.addEventListener("reading", () => {
+    gyroData.text = JSON.stringify({
+      x: gyro.x ? gyro.x.toFixed(1) : 0,
+      y: gyro.y ? gyro.y.toFixed(1) : 0,
+      z: gyro.z ? gyro.z.toFixed(1) : 0,
+    });
+  });
+  sensors.push(gyro);
+  gyro.start();
+} else {
+  gyroLabel.style.display = "none";
+  gyroData.style.display = "none";
+}
+
+if (HeartRateSensor) {
+  const hrm = new HeartRateSensor({ frequency: 1 });
+  hrm.addEventListener("reading", () => {
+    hrmData.text = JSON.stringify({
+      heartRate: hrm.heartRate ? hrm.heartRate : 0
+    });
+  });
+  sensors.push(hrm);
+  hrm.start();
+} else {
+  hrmLabel.style.display = "none";
+  hrmData.style.display = "none";
+}
+
+if (OrientationSensor) {
+  const orientation = new OrientationSensor({ frequency: 60 });
+  orientation.addEventListener("reading", () => {
+    orientationData.text = JSON.stringify({
+      quaternion: orientation.quaternion ? orientation.quaternion.map(n => n.toFixed(1)) : null
+    });
+  });
+  sensors.push(orientation);
+  orientation.start();
+} else {
+  orientationLabel.style.display = "none";
+  orientationData.style.display = "none";
+}
+
+display.addEventListener("change", () => {
+  // Automatically stop all sensors when the screen is off to conserve battery
+  display.on ? sensors.map(sensor => sensor.start()) : sensors.map(sensor => sensor.stop());
+});
+
+// Send data to device using Messaging API
+function sendVal(data) {
+  console.log(JSON.stringify(data))
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    messaging.peerSocket.send(data);
+  }  
+}
+
+*/
+Companion code
+*/
+
+import * as messaging from "messaging";
+import { settingsStorage } from "settings";
+
+// Message socket opens
+messaging.peerSocket.onopen = () => {
+  console.log("Companion Socket Open");
+  restoreSettings();
+};
+
+// Message socket closes
+messaging.peerSocket.onclose = () => {
+  console.log("Companion Socket Closed");
+};
+
+// A user changes settings
+settingsStorage.onchange = evt => {
+  let data = {
+    key: evt.key,
+    newValue: evt.newValue
+  };
+  sendVal(data);
+};
+
+// Restore any previously saved settings and send to the device
+function restoreSettings() {
+  sendVal({key:'Label1', newValue:settingsStorage.getItem('Label1')})
+  sendVal({key:'Label2', newValue:settingsStorage.getItem('Label2')})
+  sendVal({key:'Label3', newValue:settingsStorage.getItem('Label3')})
+}
+
+// Send data to device using Messaging API
+function sendVal(data) {
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    messaging.peerSocket.send(data);
+  }
+}
+
+// Message is received
+messaging.peerSocket.onmessage = evt => {
+  console.log(`Phone received: ${JSON.stringify(evt.data)}`);
+  let msg = evt.data.value
+  sendVal({key:'Response', value:'Sending ' + msg + "..."})
+  let label = ""
+  try {label = JSON.parse(settingsStorage.getItem('Label'+msg)).name} catch(err) {} 
+  let url = ""
+  try {url = JSON.parse(settingsStorage.getItem('URL'+msg)).name} catch(err) {} 
+  url = url.replace(/~Lbl/g,encodeURIComponent(label));
+  let data = ""
+  try {data = JSON.parse(settingsStorage.getItem('Data'+msg)).name} catch(err) {}
+  let headers = ""
+  try {headers = JSON.parse(settingsStorage.getItem('Headers'+msg)).name} catch(err) {}
+  console.log("URL = "+ url)
+  console.log("Data = " + data)
+  console.log("Headers = " + headers)
+  if (data == "")
+    if (headers == "")
+      fetch(url, {method: "GET"}) 
+        .then(function(response) {sendVal({key:'Response', value:response.statusText})})
+    else 
+      fetch(url, {method: "GET", headers: JSON.parse(headers)})
+        .then(function(response) {sendVal({key:'Response', value:response.statusText})})
+  else {
+    data = data.replace(/~Lbl/g,label);
+    if (headers == "") 
+      fetch(url, {method: "POST", body: data}) 
+        .then(function(response) {sendVal({key:'Response', value:response.statusText})})
+    else 
+      fetch(url, {method: "POST", headers: JSON.parse(headers), body: data})
+        .then(function(response) {sendVal({key:'Response', value:response.statusText})})
+  }
+};
