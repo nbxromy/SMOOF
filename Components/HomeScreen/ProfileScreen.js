@@ -15,11 +15,24 @@ import { SwiperFlatList } from 'react-native-swiper-flatlist';
 
 
 
+
 const URL_CONTACTS = 'http://localhost:3004/contact'
 
 //var options = {authorization : YOUR_API_KEY , message : 'Test message' ,  numbers : ['062364091']} 
-
-
+/*
+const accountSid = 'AC95c5b3c0cbd87299cd0901b3dd3c0cd7'; 
+const authToken = '[AuthToken]'; 
+const client = require('twilio')(accountSid, authToken); 
+ 
+client.messages 
+      .create({ 
+         body: 'You are sleepwalking!',  
+         messagingServiceSid: 'MG333b65da943d99f480f640a81d994367',      
+         to: '+31623642091' 
+       }) 
+      .then(message => console.log(message.sid)) 
+      .done();
+*/
 
 
 export default class ProfileScreen extends Component {
@@ -52,7 +65,7 @@ export default class ProfileScreen extends Component {
 
     get_fitbit_data = () => {
         //var now = new Date().toISOString().slice(0, 10) #doesn't work yet
-        const access_tokenHD = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMzhDUFoiLCJzdWIiOiI5V1ZaOEciLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd251dCB3cHJvIHdzbGUgd3dlaSB3c29jIHdzZXQgd2FjdCB3bG9jIiwiZXhwIjoxNjU2NjQ2ODc5LCJpYXQiOjE2NTQwNjg4OTB9.1JLYzCU40wOA_sfRBoedn6kfJJuXoh0r2-bRmpXzx4Q"
+        const access_tokenHD = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMzhDUFoiLCJzdWIiOiI5V1ZaOEciLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd3BybyB3bnV0IHdzbGUgd3dlaSB3c29jIHdhY3Qgd3NldCB3cmVzIHdveHkgd2xvYyIsImV4cCI6MTY1Nzc4OTM5MiwiaWF0IjoxNjU3MTg0NzAzfQ.ezlYwxwiBzk5wWYOCx59OlfvpRhlO2TACul0ZkgOS5I"
 
         fetch('https://api.fitbit.com/1.2/user/-/sleep/date/2022-05-18/2022-05-25.json', {
             method: "GET",
@@ -86,6 +99,7 @@ export default class ProfileScreen extends Component {
         this.get_fitbit_data();
     }
 
+    
     
 
     render() {
@@ -149,6 +163,7 @@ export default class ProfileScreen extends Component {
                  <Button
                  title=""
                  color="white"
+                 onPress={this.messages}
                  />
                  </View>
                  <View style={styles.fixToText}>

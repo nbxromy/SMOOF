@@ -29,7 +29,8 @@
     "react-native-screens": "~3.10.1",
     "react-native-sms": "^1.11.0",
     "react-native-swiper-flatlist": "^3.0.16",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "twilio": "^3.78.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
