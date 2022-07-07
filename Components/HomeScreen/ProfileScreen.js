@@ -42,9 +42,12 @@ export default class ProfileScreen extends Component {
         // const [isShowingText, setIsShowingText] = useState(true);
 
         this.state = {
-            fb_data: [0],
-            fb_dates: [0],
-            ready: "no"
+            fb_sleepdata: [],
+            fb_data: [],
+            fb_dates: [],
+            fb_hrdata: [],
+            fb_hrdates: [],
+            sleepwalktime: []
         }
     }
 
@@ -64,37 +67,51 @@ export default class ProfileScreen extends Component {
     }
 
     get_fitbit_data = () => {
-        //var now = new Date().toISOString().slice(0, 10) #doesn't work yet
-        const access_tokenHD = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMzhDUFoiLCJzdWIiOiI5V1ZaOEciLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd3BybyB3bnV0IHdzbGUgd3dlaSB3c29jIHdhY3Qgd3NldCB3cmVzIHdveHkgd2xvYyIsImV4cCI6MTY1Nzc4OTM5MiwiaWF0IjoxNjU3MTg0NzAzfQ.ezlYwxwiBzk5wWYOCx59OlfvpRhlO2TACul0ZkgOS5I"
+        const access_tokenHD = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMzhDUFoiLCJzdWIiOiI5V1ZaOEciLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJ3aHIgd3BybyB3bnV0IHdzbGUgd3dlaSB3c29jIHdhY3Qgd3NldCB3b3h5IHdyZXMgd2xvYyIsImV4cCI6MTY1Nzc4OTM5MiwiaWF0IjoxNjU3MjI0MDYzfQ.evMpeTIIiL_TFjPILuOxcwFhfV1vVMilk3FRbWYQWPU"
+        var now = new Date().toISOString().slice(0, 10);
+        var lastweek = new Date();
+        var dd = '22' //String(lastweek.getDate()-7).padStart(2, '0');
+        var mm = '06'//String(lastweek.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = lastweek.getFullYear();
+        
+        lastweek = yyyy + '-' + mm + '-' + dd;
 
-        fetch('https://api.fitbit.com/1.2/user/-/sleep/date/2022-05-18/2022-05-25.json', {
+        fetch('https://api.fitbit.com/1/user/-/hrv/date/2022-06-15/2022-06-22.json',{
+            method: "GET",
+            headers: {"Authorization": "Bearer " + access_tokenHD}
+        })
+        .then(res => { return res.json() })
+        .then(res => {
+            var hrdata = []
+            var hrdates = []
+            for( let i = 0; i < res['hrv'].length; i++){
+                hrdata[i] = res['hrv'][i]['value']['deepRmssd']
+                var date = new Date(res['hrv'][i]['dateTime'])
+                hrdates[i] = date.toDateString().slice(0,10);
+            }
+            this.setState({ fb_hrdata: hrdata})
+            this.setState({ fb_hrdates: hrdates})
+        })
+
+        fetch('https://api.fitbit.com/1.2/user/-/sleep/date/2022-06-15/2022-06-22.json', {
             method: "GET",
             headers: { "Authorization": "Bearer " + access_tokenHD }
         })
-            .then(res => { return res.json() })
-            .then(res => {
-                var data = [];
-                var dates = [];
-                data[0] = convert_data(res['sleep'][6]['minutesAsleep']),
-                data[1] = convert_data(res['sleep'][5]['minutesAsleep']),
-                data[2] = convert_data(res['sleep'][4]['minutesAsleep']),
-                data[3] = convert_data(res['sleep'][3]['minutesAsleep']),
-                data[4] = convert_data(res['sleep'][2]['minutesAsleep']),
-                data[5] = convert_data(res['sleep'][1]['minutesAsleep']),
-                data[6] = convert_data(res['sleep'][0]['minutesAsleep']),
-                dates[0] = res['sleep'][6]['dateOfSleep'],
-                dates[1] = res['sleep'][5]['dateOfSleep'],
-                dates[2] = res['sleep'][4]['dateOfSleep'],
-                dates[3] = res['sleep'][3]['dateOfSleep'],
-                dates[4] = res['sleep'][2]['dateOfSleep'],
-                dates[5] = res['sleep'][1]['dateOfSleep'],
-                dates[6] = res['sleep'][0]['dateOfSleep'];
-                this.setState({ fb_data: data })
-                this.setState({fb_dates: dates })
-                this.setState({ ready: "yes" })
-            });
+        .then(res => { return res.json() })
+        .then(res => {
+            var data = []
+            var dates = []
+            for( let i = 0; i < res['sleep'].length; i++){
+                data[i] = Math.round((res['sleep'][(res['sleep'].length-1)-i]['minutesAsleep']/60)*100)/100;
+                var date = new Date(res['sleep'][(res['sleep'].length-1)-i]['dateOfSleep'])
+                dates[i] = date.toDateString().slice(0,10);
+            }
+            this.setState({ fb_sleepdata: res['sleep'][0]})
+            this.setState({ fb_data: data })
+            this.setState({ fb_dates: dates })
+        })
     }
-
+    
     componentDidMount() {
         this.get_fitbit_data();
     }
@@ -178,10 +195,10 @@ export default class ProfileScreen extends Component {
                 <Text style={{color: 'rgb(39, 76, 119)', fontWeight: 'bold', fontSize: 20}}>Heartrate</Text>
                  <LineChart
                     data={{
-                        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sa"],
-                        datasets: [
+                            labels: this.state.fb_hrdates,
+                            datasets: [
                             {
-                                data: [0, 0, 52, 0, 0, 0, 0]
+                                data: this.state.fb_hrdata
                             }
                         ]
                     }}
@@ -224,7 +241,7 @@ export default class ProfileScreen extends Component {
                 <Button title='Heartrate:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
                  </View>
                  <View style={{justifyContent:'flex-end'}}>
-                 <Text style={styles.kleurGroen}>      Last detected = 86 Bps</Text>
+                 <Text style={styles.kleurGroen}>     Last detected = {this.state.fb_hrdata[6]} Bps</Text>
                  </View>
                  <View >
                  <Button
@@ -270,10 +287,6 @@ export default class ProfileScreen extends Component {
             </View>
         );
     }
-}
-
-function convert_data(data) {
-    return Math.round((data / 60) * 100) / 100;
 }
 
 const { width,height } = Dimensions.get('window');
