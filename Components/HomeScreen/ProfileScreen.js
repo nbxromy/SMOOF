@@ -117,7 +117,22 @@ export default class ProfileScreen extends Component {
         this.get_sleepwalk_data();
     }
 
-    
+    get_sleepwalk_data() {
+        console.log("---  fetching data from fitbit api  ---")
+        var sleepwalkdata = fetch('http://139.162.157.126/sleepwalk', {
+            method: "GET",
+            headers: {},
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                console.log("--- inside responseData ---");
+                console.log('response object:', responseData);
+                this.setState({ sleepwalkData: responseData[responseData.length-1]['date'] })
+
+            }).catch((error) => console.error(error));
+        console.log("logging sleepwalkdata variable");
+        return sleepwalkdata
+    }
     
 
 
@@ -179,7 +194,7 @@ export default class ProfileScreen extends Component {
                 <Button title='Sleepwalking:' color={'rgb(39, 76, 119)'} style={{align: 'center',justifyContent: 'center'}}/> 
                  </View>
                  <View style={{justifyContent:'flex-end'}}>
-                 <Text style={{color: 'rgb(86, 227, 159)', fontWeight: 'bold', flexWrap:'nowrap', fontSize: 17, marginBottom:4}}>      You have sleepwalked at 2022-05-15 02:37</Text>
+                 <Text style={{color: 'rgb(86, 227, 159)', fontWeight: 'bold', flexWrap:'nowrap', fontSize: 17, marginBottom:4}}>      You have sleepwalked at {this.state.sleepwalkData}</Text>
                  </View>
                  <View >
                  <Button
